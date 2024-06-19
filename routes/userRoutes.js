@@ -1,5 +1,5 @@
 import {Router} from "express";
-import UserControllers from "../Controllers/UserControllers.js";
+import UserControllers from "../controllers/UserControllers.js";
 
 const userController = new UserControllers();
 
@@ -7,20 +7,12 @@ const userRoutes = Router();
 
 userRoutes.get("/", userController.getAllUsers);
 
-userRoutes.get("/:id", (req,res)=>{
-    res.send("get user by id")
-})
+userRoutes.get("/:id", userController.getUserById);
 
-userRoutes.post("/", (req,res)=>{
-    res.send("create user")
-})
+userRoutes.post("/", userController.createUser);
 
-userRoutes.put("/:id", (req,res)=>{
-    res.send("update user by id")
-})
+userRoutes.put("/:id", userController.updateUser);
 
-userRoutes.delete("/:id", (req,res)=>{
-    res.send("delete user by id")
-})
+userRoutes.delete("/:id", userController.deleteUser);
 
 export default userRoutes;  

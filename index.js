@@ -2,6 +2,7 @@ import express from "express";
 import routes from "./routes/routes.js";
 import morgan from "morgan";
 import dbConnection from "./dbConnection/dbConnection.js";
+import {SERVER_PORT} from "./config/config.js";
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use((req,res,next) =>{
 
 await dbConnection.sync();
 
-app.listen(8080,()=>{
+app.listen(SERVER_PORT,()=>{
   console.log("Express ok");
 })
 
