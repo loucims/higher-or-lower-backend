@@ -1,8 +1,11 @@
 import express from "express";
 import routes from "./routes/routes.js";
 import morgan from "morgan";
-import dbConnection from "./dbConnection/dbConnection.js";
+import {dbConnection} from "./dbConnection/dbConnection.js";
 import {SERVER_PORT} from "./config/config.js";
+
+
+
 
 const app = express();
 

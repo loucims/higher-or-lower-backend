@@ -1,4 +1,5 @@
 import {User} from "../Models/index.js";
+import { firebaseController } from "../dbConnection/dbConnection.js";
 
 
 class UserControllers{
@@ -69,6 +70,15 @@ class UserControllers{
             res.status(200).send({success: true, message: data});
         } catch (error) {
             res.status(400).send({success: false, message: error.message});
+        }
+    };
+
+    testFirebase = async (req, res) =>{
+        try {
+            await firebaseController.setData("/testing", 'Hello world!')
+            res.status(200).send({success: true, message: "Hello world!"});
+        } catch (error) {
+            res.status(400).send({success: false, message: error});
         }
     };
 

@@ -15,4 +15,6 @@ userRoutes.put("/:id", userController.updateUser);
 
 userRoutes.delete("/:id", userController.deleteUser);
 
+userRoutes.post('/testFirebase', userController.testFirebase)
+
 export default userRoutes;  
