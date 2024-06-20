@@ -22,6 +22,26 @@ export class FirebaseController {
         this.logData("get", data)
         return data
     }
+
+    async getDataPaginated(path, limit, startAfterKey) {
+        let ref = this.firebase.ref(path).orderByKey();
+
+        if (limit) {
+            ref = ref.limitToFirst(limit);
+        }
+
+        if (startAfterKey) {
+            ref = ref.startAfter(startAfterKey);
+        }
+
+        this.log("get", path);
+        const snapshot = await ref.once('value');
+        const data = snapshot.val();
+        this.logData("get", data);
+        return data;
+    }
+
+
     async setData(path, data) {
         var ref = this.firebase.ref(path)
         this.log("setData", path)
@@ -44,6 +64,7 @@ export class FirebaseController {
         if (data == undefined) { return {}}
         var sanitizedData = {}
         if (typeof data == "object") {
+            console.log('its an object!')
             for (let index in data) {
                 if (data[index] != undefined) {
                     if (typeof data[index] == "object") {
@@ -58,7 +79,7 @@ export class FirebaseController {
         } else {
             sanitizedData = data
         }
-    
+        console.log(sanitizedData)
         return sanitizedData
     }
 
