@@ -1,13 +1,16 @@
 import express from "express";
 import routes from "./routes/routes.js";
+import cors from "cors";
 import morgan from "morgan";
 import {dbConnection} from "./dbConnection/dbConnection.js";
 import {SERVER_PORT} from "./config/config.js";
 
-
-
-
 const app = express();
+
+// Agregar/cambiar otros puertos si es necesario para que les funcione la conexion con el frontend -Sebas
+app.use(cors({
+  origin: 'http://localhost:8081'
+}));
 
 app.use(morgan("tiny"))
 app.use(express.json()) //permite decodificar y traer body de json
@@ -23,7 +26,7 @@ app.use((req,res,next) =>{
 await dbConnection.sync();
 
 app.listen(SERVER_PORT,()=>{
-  console.log("Express ok");
+  console.log("LISTENING ON PORT:", SERVER_PORT);
 })
 
 

@@ -34,10 +34,10 @@ export class FirebaseController {
             ref = ref.startAfter(startAfterKey);
         }
 
-        this.log("get", path);
+        this.log("getData", path);
         const snapshot = await ref.once('value');
         const data = snapshot.val();
-        this.logData("get", data);
+        this.logData("getData", data);
         return data;
     }
 
@@ -53,8 +53,8 @@ export class FirebaseController {
     async pushData(path, data) {
         var ref = this.firebase.ref(path)
         var newKey = await ref.push(this.sanitizeProperties(data)).then((snapshot) => {
-            this.log("push", path+" new value:"+snapshot.key)
-            this.logData("push", data)
+            this.log("pushData", path+" new value:"+snapshot.key)
+            this.logData("pushData", data)
             return snapshot.key
         })
         return newKey
@@ -92,13 +92,13 @@ export class FirebaseController {
 
     log(action, path) {
         if (this.verbose) {
-            console.log(action + " " + path)
+            console.log("[Firebase] " + action + " " + path)
         }
     }
 
     logData(action, data) {
         if (this.fullVerbose) {
-            console.log(action + " data: " + JSON.stringify(data))
+            console.log("[Firebase] " + action + " data: " + JSON.stringify(data))
         }
     }
 }
