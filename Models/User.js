@@ -1,20 +1,29 @@
 import {DataTypes, Model} from "sequelize";
 import dbConnection from "../dbConnection/dbConnection.js";
+import bcrypt from "bcrypt";
 
-class User extends Model{}
+class User extends Model{
+
+    
+    validatePassword = async (password)=>{
+        const comparePassword = await bcrypt.compare(password, this.password);
+        return comparePassword;
+    };
+}
 
 User.init({
    userName: {
     type: DataTypes.STRING,
-    allowNull:false
+    allowNull: false
    },
    mail: {
     type: DataTypes.STRING,
-    allowNull:false
+    allowNull: false,
+    unique: true
    },
    password: {
     type: DataTypes.STRING,
-    allowNull:false
+    allowNull: false
    },
 },
 {
@@ -22,5 +31,12 @@ User.init({
     modelName:"User",
 }
 );
+
+
+User.beforeCreate(async(user,options)=>{
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+    user.password = hashedPassword;
+});
 
 export default User;

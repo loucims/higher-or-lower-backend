@@ -1,4 +1,5 @@
 import {User} from "../Models/index.js";
+import { generateToken, validateToken } from "../utils/tokens.js";
 
 
 class UserControllers{
@@ -18,6 +19,12 @@ class UserControllers{
         try {
             const [data] = await User.findAll({
                 attributes:["userName"],
+                include:[
+                    {
+                        model: Stat,
+                        attributes:["recordNormal"],
+                    },
+                ],
             });
             res.status(200).send({success: true, message: data});
         } catch (error) {
@@ -33,6 +40,12 @@ class UserControllers{
                 id,
                },
                 attributes:["userName", "mail"],
+                include:[
+                    {
+                        model: Stat,
+                        attributes:["recordNormal", "recordTimer", "totalGuesses"],
+                    },
+                ],
             });
             res.status(200).send({success: true, message: data});
         } catch (error) {
@@ -71,6 +84,41 @@ class UserControllers{
             res.status(400).send({success: false, message: error.message});
         }
     };
+
+    login = async (req, res) =>{
+        try {
+            const {mail, password} = req.body;
+            const data = await User.findOne({where:{ mail }});
+            if(data===0) throw new Error("Datos incorrectos");
+
+            const comparePassword = await data.validatePassword(password);
+            if(comparePassword===false) throw new Error("Datos incorrectos");
+
+            const payload = {
+                id: data.id,
+                name: data.userName,
+            };
+
+            const token = generateToken(payload);
+            res.cookie("Token", token);
+
+            res.status(200).send({success: true, message:"Usuario logueado con exito"});
+        } catch (error) {
+            res.status(400).send({success: false, message: error.message});
+        }
+    };
+
+
+    
+    profile = async(req, res)=>{
+        try {
+            const {user}=req
+            res.status(200).send({success: true, message: user});
+        } catch (error) {
+            res.status(400).send({success:false, message: error.message});
+        }
+    };
+
 
 }
 
