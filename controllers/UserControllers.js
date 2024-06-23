@@ -1,5 +1,7 @@
 import {Stat, User} from "../Models/index.js";
 import { generateToken, validateToken } from "../utils/tokens.js";
+import { firebaseController } from "../dbConnection/dbConnection.js";
+
 
 
 class UserControllers{
