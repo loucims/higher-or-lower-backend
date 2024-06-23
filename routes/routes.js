@@ -9,7 +9,6 @@ const routes = Router();
 
 routes.use("/user", logger, userRoutes);
 routes.use("/stat", statRoutes);
-routes.use("/post", postRoutes);
 routes.use("/options", optionRoutes)
 
 
