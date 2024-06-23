@@ -10,20 +10,22 @@ class UserControllers{
         try {
             const{userName, password, mail}=req.body;
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = await User.create({
+                userName: userName, 
+                password: password, 
+                mail: mail
+            });
 
-            const data = await User.create({userName, password: hashedPassword, mail});
-
-            await Stats.create({
+            await Stat.create({
                 userId: user.id,
                 recordNormal: 0,
                 recordTimer: 0,
                 totalGuesses: 0,
-              });
+            });
 
-            res.status(200).send({success: true, message: data});
+            res.status(200).send({success: true, message: user});
         } catch (error) {
-            res.status(400).send({success: false, message: error});
+            res.status(400).send({success: false, message: error.message});
         }
     };
 
@@ -101,21 +103,22 @@ class UserControllers{
     login = async (req, res) =>{
         try {
             const {mail, password} = req.body;
-            const data = await User.findOne({where:{ mail }});
-            if(data===0) throw new Error("Datos incorrectos");
+            const user = await User.findOne({where:{ mail }});
+            if(user===0) throw new Error("Email incorrecto");
 
-            const comparePassword = await data.validatePassword(password);
-            if(comparePassword===false) throw new Error("Datos incorrectos");
+            const isPasswordValid = await user.validatePassword(password);
+            console.log("Password valid:", isPasswordValid);
+            if (!isPasswordValid) throw new Error("Password incorrecto");
 
             const payload = {
-                id: data.id,
-                name: data.userName,
+                id: user.id,
+                name: user.userName,
             };
 
             const token = generateToken(payload);
             res.cookie("Token", token);
 
-            res.status(200).send({success: true, message:"Usuario logueado con exito"});
+            res.status(200).send({success: true, message: token});
         } catch (error) {
             res.status(400).send({success: false, message: error.message});
         }
@@ -132,6 +135,31 @@ class UserControllers{
         }
     };
 
+
+    getLeaderboardUsers = async (req, res) => {
+        try {
+            const data = await User.findAll({
+                attributes: ["userName"],
+                include: [
+                    {
+                        model: Stat,
+                        as: 'stat', // Ensure this alias matches the association alias
+                        attributes: ["recordNormal"],
+                    }
+                ],
+                // Ensure order is properly defined without using request parameters
+                order: [[{ model: Stat, as: 'stat' }, 'recordNormal', 'DESC']],
+                limit: 5
+            });
+    
+            console.log("Fetched data:", JSON.stringify(data, null, 2)); // Log the fetched data
+
+
+            res.status(200).send({ success: true, message: data });
+        } catch (error) {
+            res.status(400).send({ success: false, message: error.message });
+        }
+    };
 
 }
 

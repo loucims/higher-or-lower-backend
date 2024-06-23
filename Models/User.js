@@ -3,12 +3,10 @@ import bcrypt from "bcrypt";
 import {dbConnection} from "../dbConnection/dbConnection.js";
 
 class User extends Model{
-
-    
-    validatePassword = async (password)=>{
-        const comparePassword = await bcrypt.compare(password, this.password);
-        return comparePassword;
-    };
+    async validatePassword(password) {
+        const result = await bcrypt.compare(password, this.password);
+        return result
+    }
 }
 
 User.init({

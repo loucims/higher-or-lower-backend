@@ -16,6 +16,14 @@ Stat.init({
         type: DataTypes.INTEGER,
         allowNull:false
     },
+    userId: {  
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Users',
+            key: 'id',
+        },
+    },
 },
 {
     sequelize:dbConnection,
