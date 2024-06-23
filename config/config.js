@@ -6,6 +6,8 @@ const DB_HOST=process.env.DB_HOST
 const DB_DIALECT=process.env.DB_DIALECT
 const DB_PORT=process.env.DB_PORT
 const SECRET=process.env.SECRET
+const FIREBASE_PRIVATE_KEY_ID=process.env.FIREBASE_PRIVATE_KEY_ID
+const FIREBASE_PRIVATE_KEY=process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
 
 
 
@@ -18,4 +20,7 @@ export{
     DB_DIALECT,
     DB_PORT,
     SECRET,
+    FIREBASE_PRIVATE_KEY,
+    FIREBASE_PRIVATE_KEY_ID
+
 };
