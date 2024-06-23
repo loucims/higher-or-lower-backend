@@ -1,4 +1,4 @@
-import {User} from "../Models/index.js";
+import {Stat, User} from "../Models/index.js";
 import { generateToken, validateToken } from "../utils/tokens.js";
 
 
@@ -7,7 +7,18 @@ class UserControllers{
     createUser = async (req, res) =>{
         try {
             const{userName, password, mail}=req.body;
-            const data = await User.create({userName, password, mail});
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const data = await User.create({userName, password: hashedPassword, mail});
+
+            await Stats.create({
+                userId: user.id,
+                recordNormal: 0,
+                recordTimer: 0,
+                totalGuesses: 0,
+              });
+
             res.status(200).send({success: true, message: data});
         } catch (error) {
             res.status(400).send({success: false, message: error});
