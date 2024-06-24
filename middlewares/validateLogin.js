@@ -4,6 +4,7 @@ import { validateToken } from "../utils/tokens.js";
 export const validateLogin = (req, res, next)=>{
     try {
         const { token } = req.cookies;
+        console.log(token)
         if (!token) throw new Error("Denegado");
         const payload = validateToken(token);
         console.log("Token payload:", payload);

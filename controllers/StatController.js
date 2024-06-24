@@ -18,7 +18,7 @@ class StatController{
       }
 
       if (value <= stats.recordNormal) {
-        res.json({ success: false, message: 'El nuevo record normal no es mayor al actual', stats });
+        return res.json({ success: false, message: 'El nuevo record normal no es mayor al actual', stats });
       }
 
       await Stat.update({ recordNormal: value }, { where: { userId } });
@@ -45,16 +45,16 @@ class StatController{
       }
 
       if (value <= stats.recordTimer) {
-        res.json({ success: false, message: 'El nuevo record normal no es mayor al actual', stats });
+        return res.json({ success: false, message: 'El nuevo record timer no es mayor al actual', stats });
       }
 
       await Stat.update({ recordTimer: value }, { where: { userId } });
       const updatedStats = await Stat.findOne({ where: { userId } });
       
-      res.json({ success: true, message: 'Record normal actualizado', stats: updatedStats });
+      res.json({ success: true, message: 'Record timer actualizado', stats: updatedStats });
     } catch (error) {
-      console.error('Error updating record normal:', error);
-      res.status(500).json({ success: false, message: 'Error al actualizar el record normal' });
+      console.error('Error updating record timer:', error);
+      res.status(500).json({ success: false, message: 'Error al actualizar el record timer' });
     }
   };
 

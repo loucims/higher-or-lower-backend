@@ -2,7 +2,7 @@
 
 export class FirebaseController {
     firebase
-    verbose = true
+    verbose = false
     fullVerbose = false
     constructor(firebase) {
         this.firebase = firebase
