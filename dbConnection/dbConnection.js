@@ -18,7 +18,8 @@ const dbConnection = new Sequelize( DB_NAME, DB_USER, DB_PASSWORD,{
 
 try {
     await dbConnection.authenticate();
-    console.log("La connexión se ha establecido exitosamente");
+    await dbConnection.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME};`);
+    console.log("La conexión se ha establecido exitosamente");
 } catch (error) {
     console.log("No se pudo conectar a la base de datos", error);
 }
