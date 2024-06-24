@@ -5,75 +5,103 @@ import {validateToken } from "../utils/tokens.js";
 class StatController{
 
 
-updateRecordNormal = async (req, res) => {
-    
-    const { recordNormal } = req.body;
-    const userId = req.user.id;
-  
+  updateRecordNormal = async (req, res) => {
+    const { value } = req.body;
+    const userId = req.params.userId;
+
     try {
-      const stats = await Stats.findOne({ where: { userId } });
-  
+      const stats = await Stat.findOne({ where: { userId } });
+
       if (!stats) {
-        return res.status(404).json({ error: 'Estadísticas no encontradas' });
+        console.log('Stats not found');
+        return res.status(404).json({ success: false, message: 'Estadísticas no encontradas' });
       }
-  
-      if (recordNormal > stats.recordNormal) {
-        await Stats.update({recordNormal},{where: {userId}});
-        return res.json({ message: 'Record normal actualizado', stats });
+
+      if (value <= stats.recordNormal) {
+        res.json({ success: false, message: 'El nuevo record normal no es mayor al actual', stats });
       }
-  
-      res.json({ message: 'El nuevo record normal no es mayor al actual', stats });
+
+      await Stat.update({ recordNormal: value }, { where: { userId } });
+      const updatedStats = await Stat.findOne({ where: { userId } });
+
+      res.json({ success: true, message: 'Record normal actualizado', stats: updatedStats });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al actualizar el record normal' });
+      console.error('Error updating record normal:', error);
+      res.status(500).json({ success: false, message: 'Error al actualizar el record normal' });
     }
   };
   
 
-updateRecordTimer = async (req, res) => {
-    const { recordTimer } = req.body;
-    const userId = req.user.id;
-  
+  updateRecordTimer = async (req, res) => {
+    const { value } = req.body;
+    const userId = req.params.userId;
+
     try {
-      const stats = await Stats.findOne({where: {userId}});
-  
+      const stats = await Stat.findOne({ where: { userId } });
+
       if (!stats) {
-        return res.status(404).json({ error: 'Estadísticas no encontradas' });
+        console.log('Stats not found');
+        return res.status(404).json({ success: false, message: 'Estadísticas no encontradas' });
       }
-  
-      if (recordTimer > stats.recordTimer) {
-        await Stats.update({recordTimer},{ where: {userId}});
-        return res.json({ message: 'Record timer actualizado', recordTimer });
+
+      if (value <= stats.recordTimer) {
+        res.json({ success: false, message: 'El nuevo record normal no es mayor al actual', stats });
       }
-  
-      res.json({ message: 'El nuevo record timer no es mayor al actual', recordTimer: stats.recordTimer });
+
+      await Stat.update({ recordTimer: value }, { where: { userId } });
+      const updatedStats = await Stat.findOne({ where: { userId } });
+      
+      res.json({ success: true, message: 'Record normal actualizado', stats: updatedStats });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al actualizar el record timer' });
+      console.error('Error updating record normal:', error);
+      res.status(500).json({ success: false, message: 'Error al actualizar el record normal' });
     }
   };
 
 
-updateTotalGuesses = async (req, res) => {
-    const { additionalGuesses } = req.body;
-    const userId = req.user.id;
-  
+  updateTotalGuesses = async (req, res) => {
+    const { value } = req.body;
+    const userId = req.params.userId;
+
     try {
-      const stats = await Stats.findOne({ where: { userId } });
-  
+      const stats = await Stat.findOne({ where: { userId } });
+
       if (!stats) {
         return res.status(404).json({ error: 'Estadísticas no encontradas' });
       }
   
-      const newTotalGuesses = stats.totalGuesses + additionalGuesses;
-      await Stats.update({totalGuesses: newTotalGuesses},{where: {userId}});
+      const newTotalGuesses = stats.totalGuesses + value;
+      await Stat.update({totalGuesses: newTotalGuesses},{where: {userId}});
   
       res.json({ message: 'Total de adivinanzas actualizado', totalGuesses: newTotalGuesses });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al actualizar el total de adivinanzas' });
+      console.error('Error updating record normal:', error);
+      res.status(500).json({ success: false, message: 'Error al actualizar el record normal' });
     }
   };
+
+
+
+// updateTotalGuesses = async (req, res) => {
+//     const { additionalGuesses } = req.body;
+//     const userId = req.user.id;
+  
+//     try {
+//       const stats = await Stats.findOne({ where: { userId } });
+  
+//       if (!stats) {
+//         return res.status(404).json({ error: 'Estadísticas no encontradas' });
+//       }
+  
+//       const newTotalGuesses = stats.totalGuesses + additionalGuesses;
+//       await Stats.update({totalGuesses: newTotalGuesses},{where: {userId}});
+  
+//       res.json({ message: 'Total de adivinanzas actualizado', totalGuesses: newTotalGuesses });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error: 'Error al actualizar el total de adivinanzas' });
+//     }
+//   };
   
 
 

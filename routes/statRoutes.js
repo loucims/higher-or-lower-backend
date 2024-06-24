@@ -11,9 +11,9 @@ const statRoutes = Router();
 statRoutes.use(validateLogin);
 statRoutes.use(validatePositiveNumber);
 
-statRoutes.put("/:id", statController.updateRecordNormal);
-statRoutes.put("/:id", statController.updateRecordTimer);
-statRoutes.put("/:id", statController.updateTotalGuesses);
+statRoutes.put("/updateNormalRecord/:userId", statController.updateRecordNormal);
+statRoutes.put("/updateTimedRecord/:userId", statController.updateRecordTimer);
+statRoutes.put("/updateTotalGuesses/:userId", statController.updateTotalGuesses);
 
 
 export default statRoutes;  
