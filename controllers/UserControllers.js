@@ -183,6 +183,30 @@ class UserControllers{
         }
     };
 
+
+    getLeaderboardUsersTimer = async (req, res) => {
+        try {
+            const data = await User.findAll({
+                attributes: ["userName"],
+                include: [
+                    {
+                        model: Stat,
+                        as: 'stat',
+                        attributes: ["recordTimer"],
+                    }
+                ],
+                order: [[{ model: Stat, as: 'stat' }, 'recordTimer', 'DESC']],
+                limit: 5
+            });
+
+            res.status(200).send({ success: true, message: data });
+        } catch (error) {
+            res.status(400).send({ success: false, message: error.message });
+        }
+    };
+
 }
+
+
 
 export default UserControllers;

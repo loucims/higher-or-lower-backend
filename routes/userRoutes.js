@@ -13,6 +13,7 @@ userRoutes.use(validateLogin);
 
 userRoutes.get("/profile", userController.profile);
 userRoutes.get('/leaderboard', userController.getLeaderboardUsers)
+userRoutes.get('/leaderboardTimer', userController.getLeaderboardUsersTimer)
 userRoutes.get("/", userController.getAllUsers);
 userRoutes.get("/:id", userController.getUserById);
 userRoutes.put("/:id", userController.updateUser);
