@@ -23,7 +23,15 @@ class UserControllers{
                 totalGuesses: 0,
             });
 
-            res.status(200).send({success: true, message: user});
+            const payload = {
+                id: user.id,
+                name: user.userName,
+            };
+
+            const token = generateToken(payload);
+            res.cookie("Token", token);
+
+            res.status(200).send({success: true, message: token});
         } catch (error) {
             res.status(400).send({success: false, message: "Error al crear el usuario (El email no puede ya existir)"});
         }
