@@ -169,11 +169,33 @@ class UserControllers{
         }
     };
 
+    profileForID = async(req, res)=>{
+        try {
+            const id = req.params.id
+            let fullUser = await User.findOne({
+                where: {
+                 id: id,
+                },
+                 attributes:["userName", "mail", "id"],
+                 include:[
+                     {
+                         model: Stat,
+                         as: 'stat',
+                         attributes:["recordNormal", "recordTimer", "totalGuesses"],
+                     },
+                 ],
+             });
+            res.status(200).send({success: true, message: fullUser});
+        } catch (error) {
+            res.status(400).send({success:false, message: error.message});
+        }
+    };
+
 
     getLeaderboardUsers = async (req, res) => {
         try {
             const data = await User.findAll({
-                attributes: ["userName"],
+                attributes: ["userName", "id"],
                 include: [
                     {
                         model: Stat,
@@ -195,7 +217,7 @@ class UserControllers{
     getLeaderboardUsersTimer = async (req, res) => {
         try {
             const data = await User.findAll({
-                attributes: ["userName"],
+                attributes: ["userName", "id"],
                 include: [
                     {
                         model: Stat,
