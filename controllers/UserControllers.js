@@ -154,7 +154,7 @@ class UserControllers{
                 where: {
                  id: user.payload.id,
                 },
-                 attributes:["userName", "mail"],
+                 attributes:["userName", "mail", "id"],
                  include:[
                      {
                          model: Stat,

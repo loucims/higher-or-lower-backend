@@ -3,9 +3,15 @@ import { validateToken } from "../utils/tokens.js";
 
 export const validateLogin = (req, res, next)=>{
     try {
-        const { token } = req.cookies;
-        console.log(token)
-        if (!token) throw new Error("Denegado");
+        let { token } = req.cookies;
+        console.log("Token que llego: " + token)
+        if (!token) {
+            token = req.headers.authorization;
+            console.log("Token que llego por headers: " + token)
+            if (!token) {
+                throw new Error("Token es undefined");
+            }
+        }
         const payload = validateToken(token);
         console.log("Token payload:", payload);
         req.user = payload;
